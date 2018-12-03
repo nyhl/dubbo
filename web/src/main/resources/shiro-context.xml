@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+	   http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
+	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+		<!-- 装配 securityManager -->
+		<property name="securityManager" ref="securityManager" />
+		<!-- 配置登陆页面 -->
+		<property name="loginUrl" value="/login.html" />
+		<!-- 登陆成功后的一面 -->
+		<property name="successUrl" value="/index.html" />
+		<!-- 通过unauthorizedUrl指定没有权限操作时跳转页面 -->
+		<property name="unauthorizedUrl" value="/login.html" />
+		<property name="filterChainDefinitions">
+			<value>
+				/frame/**=anon
+				/js/**=anon
+				/login.html=anon
+				/sys/login=anon
+			<!--	/sys/user/getUser=anon-->
+				/**=authc
+			</value>
+		</property>
+	</bean>
+	<bean id="userRealm" class="com.securty.UserRealm" />
+	<!--<bean id="shiroManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
+		<property name ="cacheManagerConfigFile" value="classpath:ehcache.xml"/>
+	</bean>-->
+	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+		<property name="realm" ref="userRealm" />
+		<!--<property name="cacheManager" ref="shiroManager" />-->
+	</bean>
+	<bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>
+	<bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" depends-on="lifecycleBeanPostProcessor"/>
+	<bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+		<property name="securityManager" ref="securityManager"/>
+	</bean>
+</beans>

@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dao.SysMenuMapper" >
+  <!--cache type="com.nyh.common.RedisCache"/>-->
+  <resultMap id="BaseResultMap" type="pojo.SysMenu" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="parent_id" property="parent_id" jdbcType="VARCHAR" />
+    <result column="parent_ids" property="parent_ids" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="sort" property="sort" jdbcType="DECIMAL" />
+    <result column="href" property="href" jdbcType="VARCHAR" />
+    <result column="icon" property="icon" jdbcType="VARCHAR" />
+    <result column="is_show" property="is_show" jdbcType="CHAR" />
+    <result column="permission" property="permission" jdbcType="VARCHAR" />
+    <result column="remarks" property="remarks" jdbcType="VARCHAR" />
+    <result column="create_date" property="create_date" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="update_date" jdbcType="TIMESTAMP" />
+    <result column="del_flag" property="del_flag" jdbcType="CHAR" />
+  </resultMap>
+  <resultMap id="MenuTree" type="pojo.SysMenu" >
+    <id column="id" property="id"/>
+    <result column="parent_id" property="parent_id" jdbcType="VARCHAR" />
+    <result column="parent_ids" property="parent_ids" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="sort" property="sort" jdbcType="DECIMAL" />
+    <result column="href" property="href" jdbcType="VARCHAR" />
+    <result column="icon" property="icon" jdbcType="VARCHAR" />
+    <result column="is_show" property="is_show" jdbcType="CHAR" />
+    <result column="permission" property="permission" jdbcType="VARCHAR" />
+    <result column="remarks" property="remarks" jdbcType="VARCHAR" />
+    <result column="create_date" property="create_date" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="update_date" jdbcType="TIMESTAMP" />
+    <result column="del_flag" property="del_flag" jdbcType="CHAR" />
+    <result column="name" property="name"/>
+    <collection property="subset" ofType="pojo.SysMenu" column="id" select="selectchild">
+      <id column="id" property="id"/><!-- 这里的column对应的是下面查询的别名，而不是表字段名 -->
+      <result column="parent_id" property="parent_id" jdbcType="VARCHAR" />
+      <result column="parent_ids" property="parent_ids" jdbcType="VARCHAR" />
+      <result column="name" property="name" jdbcType="VARCHAR" />
+      <result column="sort" property="sort" jdbcType="DECIMAL" />
+      <result column="href" property="href" jdbcType="VARCHAR" />
+      <result column="icon" property="icon" jdbcType="VARCHAR" />
+      <result column="is_show" property="is_show" jdbcType="CHAR" />
+      <result column="permission" property="permission" jdbcType="VARCHAR" />
+      <result column="remarks" property="remarks" jdbcType="VARCHAR" />
+      <result column="create_date" property="create_date" jdbcType="TIMESTAMP" />
+      <result column="update_date" property="update_date" jdbcType="TIMESTAMP" />
+      <result column="del_flag" property="del_flag" jdbcType="CHAR" />
+    </collection>
+
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, parent_id, parent_ids, name, sort, href, icon, is_show, permission, remarks, 
+    create_date, update_date, del_flag
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_menu
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from sys_menu
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="pojo.SysMenu" >
+    insert into sys_menu (id, parent_id, parent_ids, 
+      name, sort, href, icon, 
+      is_show, permission, remarks, 
+      create_date, update_date, del_flag
+      )
+    values (#{id,jdbcType=VARCHAR}, #{parent_id,jdbcType=VARCHAR}, #{parent_ids,jdbcType=VARCHAR}, 
+      #{name,jdbcType=VARCHAR}, #{sort,jdbcType=DECIMAL}, #{href,jdbcType=VARCHAR}, #{icon,jdbcType=VARCHAR}, 
+      #{is_show,jdbcType=CHAR}, #{permission,jdbcType=VARCHAR}, #{remarks,jdbcType=VARCHAR}, 
+      #{create_date,jdbcType=TIMESTAMP}, #{update_date,jdbcType=TIMESTAMP}, #{del_flag,jdbcType=CHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="pojo.SysMenu" >
+    insert into sys_menu
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="parent_id != null" >
+        parent_id,
+      </if>
+      <if test="parent_ids != null" >
+        parent_ids,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="sort != null" >
+        sort,
+      </if>
+      <if test="href != null" >
+        href,
+      </if>
+      <if test="icon != null" >
+        icon,
+      </if>
+      <if test="is_show != null" >
+        is_show,
+      </if>
+      <if test="permission != null" >
+        permission,
+      </if>
+      <if test="remarks != null" >
+        remarks,
+      </if>
+      <if test="create_date != null" >
+        create_date,
+      </if>
+      <if test="update_date != null" >
+        update_date,
+      </if>
+      <if test="del_flag != null" >
+        del_flag,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="parent_id != null" >
+        #{parent_id,jdbcType=VARCHAR},
+      </if>
+      <if test="parent_ids != null" >
+        #{parent_ids,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="sort != null" >
+        #{sort,jdbcType=DECIMAL},
+      </if>
+      <if test="href != null" >
+        #{href,jdbcType=VARCHAR},
+      </if>
+      <if test="icon != null" >
+        #{icon,jdbcType=VARCHAR},
+      </if>
+      <if test="is_show != null" >
+        #{is_show,jdbcType=CHAR},
+      </if>
+      <if test="permission != null" >
+        #{permission,jdbcType=VARCHAR},
+      </if>
+      <if test="remarks != null" >
+        #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="create_date != null" >
+        #{create_date,jdbcType=TIMESTAMP},
+      </if>
+      <if test="update_date != null" >
+        #{update_date,jdbcType=TIMESTAMP},
+      </if>
+      <if test="del_flag != null" >
+        #{del_flag,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="pojo.SysMenu" >
+    update sys_menu
+    <set >
+      <if test="parent_id != null" >
+        parent_id = #{parent_id,jdbcType=VARCHAR},
+      </if>
+      <if test="parent_ids != null" >
+        parent_ids = #{parent_ids,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="sort != null" >
+        sort = #{sort,jdbcType=DECIMAL},
+      </if>
+      <if test="href != null" >
+        href = #{href,jdbcType=VARCHAR},
+      </if>
+      <if test="icon != null" >
+        icon = #{icon,jdbcType=VARCHAR},
+      </if>
+      <if test="is_show != null" >
+        is_show = #{is_show,jdbcType=CHAR},
+      </if>
+      <if test="permission != null" >
+        permission = #{permission,jdbcType=VARCHAR},
+      </if>
+      <if test="remarks != null" >
+        remarks = #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="create_date != null" >
+        create_date = #{create_date,jdbcType=TIMESTAMP},
+      </if>
+      <if test="update_date != null" >
+        update_date = #{update_date,jdbcType=TIMESTAMP},
+      </if>
+      <if test="del_flag != null" >
+        del_flag = #{del_flag,jdbcType=CHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="pojo.SysMenu" >
+    update sys_menu
+    set parent_id = #{parent_id,jdbcType=VARCHAR},
+      parent_ids = #{parent_ids,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      sort = #{sort,jdbcType=DECIMAL},
+      href = #{href,jdbcType=VARCHAR},
+      icon = #{icon,jdbcType=VARCHAR},
+      is_show = #{is_show,jdbcType=CHAR},
+      permission = #{permission,jdbcType=VARCHAR},
+      remarks = #{remarks,jdbcType=VARCHAR},
+      create_date = #{create_date,jdbcType=TIMESTAMP},
+      update_date = #{update_date,jdbcType=TIMESTAMP},
+      del_flag = #{del_flag,jdbcType=CHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <select id="findPermissionByUserId" resultType="string">
+    SELECT m.permission from sys_user_role ur,sys_role_menu rm,sys_menu m
+    where ur.user_id=#{userId} and ur.role_id=rm.role_id and rm.menu_id=m.id
+  </select>
+  
+
+  <select id="getTreeList"  resultMap="MenuTree" >
+    select * from sys_menu where parent_id =''
+  </select>
+  <select id="selectchild" resultMap="MenuTree">
+    select * from sys_menu where parent_id= #{id} and  parent_id != ''
+  </select>
+  
+</mapper>
